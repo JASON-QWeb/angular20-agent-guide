@@ -168,3 +168,14 @@ Angular 20 默认开启水合。
 - **单元测试**：使用 `ComponentFixture.setComponentInputs` 测试信号 Input。
 - **组件测试**：利用 `TestBed.runInInjectionContext` 测试自定义信号操作符。
 
+## 9. Agent 指令 (Agent Instructions)
+
+当你在开发 Angular 项目时，请遵循：
+1. **优先使用 Signals**：任何状态改变都应通过信号（signal, computed, model）。
+2. **强制 Standalone**：拒绝创建任何 `*.module.ts`，所有组件/指令/管道必须是 standalone。
+3. **采用新控制流**：禁止在 HTML 中使用 `*ngIf`, `*ngFor` 等旧指令，统一使用 `@if`, `@for`。
+4. **NG-ZORRO 优先**：UI 组件优先使用 NG-ZORRO，并注意属性绑定的信号语法 `[attr]="sig()"`。
+5. **代码简洁**：充分利用 `@let` 减少模板中的重复计算，保持组件逻辑清晰。
+6. **无区优先**：编写代码时默认不依赖 `zone.js` 的自动检测，确保手动变更触发（通过信号）。
+
+
