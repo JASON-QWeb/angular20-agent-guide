@@ -129,11 +129,42 @@ formValue = toSignal(this.form.valueChanges, { initialValue: this.form.value });
 
 ---
 
-## 5. Agent 指令 (Agent Instructions)
+## 6. 推荐项目结构 (Recommended Structure)
+```
+src/
+├── app/
+│   ├── core/           # 全局单例服务, 拦截器, Guard
+│   ├── shared/         # 公用组件, 指令, 管道 (都是 Standalone)
+│   ├── features/       # 业务特性模块
+│   │   └── user/
+│   │       ├── user-list.component.ts
+│   │       ├── user-detail.component.ts
+│   │       └── user.service.ts
+│   ├── app.config.ts   # 替代 app.module.ts 的全局配置
+│   └── app.routes.ts   # 路由定义
+```
 
-当你在开发 Angular 项目时，请遵循：
-1. **优先使用 Signals**：任何状态改变都应通过信号。
-2. **强制 Standalone**：拒绝创建任何 `*.module.ts`。
-3. **采用新控制流**：禁止在 HTML 中使用 `*ngIf` 等指令。
-4. **NG-ZORRO 优先**：UI 组件优先查阅 NG-ZORRO 官方文档。
-5. **代码简洁**：利用 `@let` 减少模板中的重复计算。
+## 7. 高级特性 (Advanced Features)
+
+### 7.1 水合与服务端渲染 (SSR & Hydration)
+Angular 20 默认开启水合。
+- **配置**：`provideClientHydration(withIncrementalHydration())`。
+- **注意**：避免在 `constructor` 中直接操作 DOM，应使用 `afterRender` 或 `afterNextRender` 生命周期。
+
+### 7.2 局部变量 `@let`
+`@let` 可以用于在模板中解构信号值或存储复杂的布尔逻辑，显著提高可读性。
+```html
+@let loading = userResource.isLoading();
+@let error = userResource.error();
+
+@if (loading) {
+  <nz-spin></nz-spin>
+} @else if (error) {
+  <nz-alert nzType="error" [nzMessage]="error"></nz-alert>
+}
+```
+
+## 8. 自动化测试建议
+- **单元测试**：使用 `ComponentFixture.setComponentInputs` 测试信号 Input。
+- **组件测试**：利用 `TestBed.runInInjectionContext` 测试自定义信号操作符。
+
